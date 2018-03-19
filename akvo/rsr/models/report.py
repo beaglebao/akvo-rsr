@@ -23,6 +23,9 @@ class ReportFormat(models.Model):
     display_name = ValidXMLCharField(_('display name'), max_length=30, unique=True)
     icon = ValidXMLCharField(_('icon'), max_length=30)
 
+    class Meta:
+        app_label = 'rsr'
+
     def __unicode__(self):
         return u'{}'.format(self.name)
 
@@ -68,3 +71,6 @@ class Report(models.Model):
             )
 
         super(Report, self).clean(*args, **kwargs)
+
+    class Meta:
+        app_label = 'rsr'

@@ -10,8 +10,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator, MaxLeng
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from south.modelsinspector import add_introspection_rules
-
 from akvo.rsr.validators import string_validator
 
 
@@ -98,10 +96,12 @@ class ProjectLimitedTextField(LimitedTextField):
 # needed to get custom fields work with South.
 # See http://south.aeracode.org/docs/customfields.html#extending-introspection
 
-add_introspection_rules([], ["^akvo\.rsr\.fields\.NullCharField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.LatitudeField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.LongitudeField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.ValidXMLCharField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.ValidXMLTextField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.LimitedTextField"])
-add_introspection_rules([], ["^akvo\.rsr\.fields\.ProjectLimitedTextField"])
+# DJANGO_UPGRADE_FIXME FIXME South, Really?!
+# from south.modelsinspector import add_introspection_rules
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.NullCharField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.LatitudeField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.LongitudeField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.ValidXMLCharField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.ValidXMLTextField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.LimitedTextField"])
+# add_introspection_rules([], ["^akvo\.rsr\.fields\.ProjectLimitedTextField"])

@@ -141,3 +141,6 @@ class OrganisationCustomField(models.Model):
         help_text=_(u'Select the type of custom field. Text will show a text area in the project '
                     u'editor, and checkbox will show a checkbox.')
     )
+
+    class Meta:
+        app_label = 'rsr'

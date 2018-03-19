@@ -1,0 +1,6 @@
+django==1.9.13
+sorl-thumbnail==12.4.1
+django-filter==1.1.0
+django-embed-video==1.1.2
+django-registration==2.0.0
+django-bootstrap3==9.1.0

@@ -52,9 +52,8 @@ class ProjectIatiExportViewSet(PublicProjectViewSet):
         'title',
         'is_public',
         'status',
-    ).select_related(
-        'partners',
     ).prefetch_related(
+        'partners',
         'iati_checks',
         'publishingstatus',
         'partnerships',

@@ -8,11 +8,12 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 
 
 from django import forms
+from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import helpers, widgets
 from django.contrib.admin.options import IS_POPUP_VAR
-from django.contrib.admin.util import flatten_fieldsets
+from django.contrib.admin.utils import flatten_fieldsets
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.contrib.auth.forms import (
@@ -20,9 +21,8 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth.models import Group
 from django.db import models, transaction
-from django.db.models import get_model
 from django.forms.formsets import all_valid
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.forms import TextInput
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -59,7 +59,7 @@ class CountryAdmin(admin.ModelAdmin):
 
 
 class OrganisationLocationInline(NestedStackedInline):
-    model = get_model('rsr', 'organisationlocation')
+    model = apps.get_model('rsr', 'organisationlocation')
     fields = ('latitude', 'longitude', 'city', 'state', 'address_1', 'address_2', 'postcode',
               'iati_country')
     fk_name = 'location_target'
@@ -72,7 +72,7 @@ class OrganisationLocationInline(NestedStackedInline):
 
 
 class OrganisationTotalBudgetLineInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationtotalbudgetline')
+    model = apps.get_model('rsr', 'organisationtotalbudgetline')
     fields = ('currency', 'value', 'value_date', 'reference', 'text')
     fk_name = 'budget'
 
@@ -81,7 +81,7 @@ class OrganisationTotalBudgetLineInline(NestedTabularInline):
 
 
 class OrganisationTotalBudgetInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationtotalbudget')
+    model = apps.get_model('rsr', 'organisationtotalbudget')
     inlines = (OrganisationTotalBudgetLineInline,)
     fields = ('currency', 'value', 'value_date', 'period_start', 'period_end', 'status')
     fk_name = 'organisation'
@@ -94,7 +94,7 @@ class OrganisationTotalBudgetInline(NestedTabularInline):
 
 
 class OrganisationRecipientOrgBudgetLineInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationrecipientorgbudgetline')
+    model = apps.get_model('rsr', 'organisationrecipientorgbudgetline')
     fields = ('currency', 'value', 'value_date', 'reference', 'text')
     fk_name = 'budget'
 
@@ -103,7 +103,7 @@ class OrganisationRecipientOrgBudgetLineInline(NestedTabularInline):
 
 
 class OrganisationRecipientOrgBudgetInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationrecipientorgbudget')
+    model = apps.get_model('rsr', 'organisationrecipientorgbudget')
     inlines = (OrganisationRecipientOrgBudgetLineInline, )
     fields = ('recipient_organisation', 'currency', 'value', 'value_date', 'period_start',
               'period_end', 'status')
@@ -117,7 +117,7 @@ class OrganisationRecipientOrgBudgetInline(NestedTabularInline):
 
 
 class OrganisationRegionBudgetLineInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationregionbudgetline')
+    model = apps.get_model('rsr', 'organisationregionbudgetline')
     fields = ('currency', 'value', 'value_date', 'reference', 'text')
     fk_name = 'budget'
 
@@ -126,7 +126,7 @@ class OrganisationRegionBudgetLineInline(NestedTabularInline):
 
 
 class OrganisationRegionBudgetInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationregionbudget')
+    model = apps.get_model('rsr', 'organisationregionbudget')
     inlines = (OrganisationRegionBudgetLineInline, )
     fields = ('region', 'region_vocabulary', 'region_vocabulary_uri', 'text', 'currency', 'value',
               'value_date', 'period_start', 'period_end', 'status')
@@ -140,7 +140,7 @@ class OrganisationRegionBudgetInline(NestedTabularInline):
 
 
 class OrganisationCountryBudgetLineInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationcountrybudgetline')
+    model = apps.get_model('rsr', 'organisationcountrybudgetline')
     fields = ('currency', 'value', 'value_date', 'reference', 'text')
     fk_name = 'budget'
 
@@ -149,7 +149,7 @@ class OrganisationCountryBudgetLineInline(NestedTabularInline):
 
 
 class OrganisationCountryBudgetInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationcountrybudget')
+    model = apps.get_model('rsr', 'organisationcountrybudget')
     inlines = (OrganisationCountryBudgetLineInline, )
     fields = ('country', 'text', 'currency', 'value', 'value_date', 'period_start', 'period_end',
               'status')
@@ -163,7 +163,7 @@ class OrganisationCountryBudgetInline(NestedTabularInline):
 
 
 class OrganisationTotalExpenditureLineInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationexpenseline')
+    model = apps.get_model('rsr', 'organisationexpenseline')
     fields = ('currency', 'value', 'value_date', 'reference', 'text')
     fk_name = 'expenditure'
 
@@ -172,7 +172,7 @@ class OrganisationTotalExpenditureLineInline(NestedTabularInline):
 
 
 class OrganisationTotalExpenditureInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationtotalexpenditure')
+    model = apps.get_model('rsr', 'organisationtotalexpenditure')
     inlines = (OrganisationTotalExpenditureLineInline, )
     fields = ('currency', 'value', 'value_date', 'period_start', 'period_end')
     fk_name = 'organisation'
@@ -185,7 +185,7 @@ class OrganisationTotalExpenditureInline(NestedTabularInline):
 
 
 class OrganisationDocumentCategoryInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationdocumentcategory')
+    model = apps.get_model('rsr', 'organisationdocumentcategory')
     fields = ('category', )
     fk_name = 'document'
 
@@ -194,7 +194,7 @@ class OrganisationDocumentCategoryInline(NestedTabularInline):
 
 
 class OrganisationDocumentCountryInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationdocumentcountry')
+    model = apps.get_model('rsr', 'organisationdocumentcountry')
     fields = ('country', 'text')
     fk_name = 'document'
 
@@ -203,7 +203,7 @@ class OrganisationDocumentCountryInline(NestedTabularInline):
 
 
 class OrganisationDocumentInline(NestedStackedInline):
-    model = get_model('rsr', 'organisationdocument')
+    model = apps.get_model('rsr', 'organisationdocument')
     inlines = (OrganisationDocumentCategoryInline, OrganisationDocumentCountryInline)
     fields = ('url', 'document', 'format', 'title', 'title_language', 'language', 'document_date')
     fk_name = 'organisation'
@@ -216,7 +216,7 @@ class OrganisationDocumentInline(NestedStackedInline):
 
 
 class OrganisationCustomFieldInline(NestedTabularInline):
-    model = get_model('rsr', 'organisationcustomfield')
+    model = apps.get_model('rsr', 'organisationcustomfield')
     fields = ('name', 'type', 'section', 'order', 'max_characters', 'mandatory', 'help_text')
     fk_name = 'organisation'
 
@@ -228,7 +228,7 @@ class OrganisationCustomFieldInline(NestedTabularInline):
 
 
 class OrganisationIndicatorLabelInline(NestedTabularInline):
-    model = get_model('rsr', 'OrganisationIndicatorLabel')
+    model = apps.get_model('rsr', 'OrganisationIndicatorLabel')
     fields = ('label',)
     fk_name = 'organisation'
 
@@ -243,7 +243,7 @@ class InternalOrganisationIDAdmin(admin.ModelAdmin):
     list_display = (u'identifier', u'recording_org', u'referenced_org',)
     search_fields = (u'identifier', u'recording_org__name', u'referenced_org__name',)
 
-admin.site.register(get_model('rsr', 'internalorganisationid'), InternalOrganisationIDAdmin)
+admin.site.register(apps.get_model('rsr', 'internalorganisationid'), InternalOrganisationIDAdmin)
 
 
 class OrganisationAdminForm(forms.ModelForm):
@@ -398,17 +398,17 @@ class OrganisationAdmin(TimestampsAdminDisplayMixin, ObjectPermissionsModelAdmin
         context.update(extra_context or {})
         return self.render_change_form(request, context, form_url=form_url, add=True)
 
-admin.site.register(get_model('rsr', 'organisation'), OrganisationAdmin)
+admin.site.register(apps.get_model('rsr', 'organisation'), OrganisationAdmin)
 
 
 class OrganisationAccountAdmin(admin.ModelAdmin):
     list_display = (u'organisation', u'account_level', )
 
-admin.site.register(get_model('rsr', 'organisationaccount'), OrganisationAccountAdmin)
+admin.site.register(apps.get_model('rsr', 'organisationaccount'), OrganisationAccountAdmin)
 
 
 class LinkInline(NestedTabularInline):
-    model = get_model('rsr', 'link')
+    model = apps.get_model('rsr', 'link')
     fields = ('kind', 'url', 'caption')
 
     def get_extra(self, request, obj=None, **kwargs):
@@ -421,7 +421,7 @@ class LinkInline(NestedTabularInline):
 class BudgetItemLabelAdmin(admin.ModelAdmin):
     list_display = (u'label',)
 
-admin.site.register(get_model('rsr', 'budgetitemlabel'), BudgetItemLabelAdmin)
+admin.site.register(apps.get_model('rsr', 'budgetitemlabel'), BudgetItemLabelAdmin)
 
 
 class BudgetItemAdminInLineFormSet(forms.models.BaseInlineFormSet):
@@ -446,7 +446,7 @@ class BudgetItemAdminInLineFormSet(forms.models.BaseInlineFormSet):
 
 
 class BudgetItemAdminInLine(NestedTabularInline):
-    model = get_model('rsr', 'budgetitem')
+    model = apps.get_model('rsr', 'budgetitem')
     extra = 1
     formset = BudgetItemAdminInLineFormSet
     fields = ('label', 'other_extra', 'type', 'amount', 'period_start', 'period_end', 'value_date')
@@ -483,16 +483,16 @@ class PublishingStatusAdmin(admin.ModelAdmin):
                 qs = qs | PublishingStatus.objects.filter(project__pk__in=project_pks)
         return qs.distinct()
 
-admin.site.register(get_model('rsr', 'publishingstatus'), PublishingStatusAdmin)
+admin.site.register(apps.get_model('rsr', 'publishingstatus'), PublishingStatusAdmin)
 
 
 class BenchmarknameInline(admin.TabularInline):
-    model = get_model('rsr', 'Category').benchmarknames.through
+    model = apps.get_model('rsr', 'Category').benchmarknames.through
     extra = 3
 
 
 class BenchmarkInline(NestedTabularInline):
-    model = get_model('rsr', 'benchmark')
+    model = apps.get_model('rsr', 'benchmark')
     # only show the value, category and benchmark are not to be edited here
     fieldsets = (
         (None, {
@@ -505,7 +505,7 @@ class BenchmarkInline(NestedTabularInline):
 
 
 class GoalInline(NestedTabularInline):
-    model = get_model('rsr', 'goal')
+    model = apps.get_model('rsr', 'goal')
     fieldsets = (
         (None, {
             'classes': ('collapse',),
@@ -566,7 +566,7 @@ class RSR_PartnershipInlineFormFormSet(forms.models.BaseInlineFormSet):
 
 class PartnershipInline(NestedTabularInline):
 
-    model = get_model('rsr', 'Partnership')
+    model = apps.get_model('rsr', 'Partnership')
     fields = ('organisation', 'iati_organisation_role', 'funding_amount', 'internal_id')
     extra = 0
     formset = RSR_PartnershipInlineFormFormSet
@@ -590,14 +590,14 @@ class PartnershipInline(NestedTabularInline):
 
 class LocationAdministrativeInline(NestedTabularInline):
 
-    model = get_model('rsr', 'administrativelocation')
+    model = apps.get_model('rsr', 'administrativelocation')
     fields = ('code', 'vocabulary', 'level')
     extra = 0
 
 
 class ProjectLocationInline(NestedStackedInline):
 
-    model = get_model('rsr', 'projectlocation')
+    model = apps.get_model('rsr', 'projectlocation')
     inlines = (LocationAdministrativeInline,)
     fieldsets = (
         (None, {
@@ -619,7 +619,7 @@ class ProjectLocationInline(NestedStackedInline):
 
 
 class ProjectDocumentInline(NestedStackedInline):
-    model = get_model('rsr', 'ProjectDocument')
+    model = apps.get_model('rsr', 'ProjectDocument')
     fieldsets = (
         (None, {
             'fields': ('url', 'document', 'title', 'format', 'language')
@@ -634,7 +634,7 @@ class ProjectDocumentInline(NestedStackedInline):
 
 
 class CountryBudgetInline(NestedTabularInline):
-    model = get_model('rsr', 'CountryBudgetItem')
+    model = apps.get_model('rsr', 'CountryBudgetItem')
     extra = 0
     fieldsets = (
         ('Country Budget Item', {
@@ -645,7 +645,7 @@ class CountryBudgetInline(NestedTabularInline):
 
 
 class IndicatorPeriodInline(NestedTabularInline):
-    model = get_model('rsr', 'IndicatorPeriod')
+    model = apps.get_model('rsr', 'IndicatorPeriod')
     fields = ('period_start', 'period_end', 'target_value', 'target_comment', 'actual_value',
               'actual_comment')
 
@@ -657,7 +657,7 @@ class IndicatorPeriodInline(NestedTabularInline):
 
 
 class IndicatorInline(NestedTabularInline):
-    model = get_model('rsr', 'Indicator')
+    model = apps.get_model('rsr', 'Indicator')
     fields = ('title', 'description', 'measure', 'ascending', 'baseline_year', 'baseline_value',
               'baseline_comment')
     inlines = (IndicatorPeriodInline,)
@@ -670,7 +670,7 @@ class IndicatorInline(NestedTabularInline):
 
 
 class ResultInline(NestedTabularInline):
-    model = get_model('rsr', 'Result')
+    model = apps.get_model('rsr', 'Result')
     inlines = (IndicatorInline,)
     fields = ('title', 'description', 'type', 'aggregation_status')
 
@@ -682,7 +682,7 @@ class ResultInline(NestedTabularInline):
 
 
 class PlannedDisbursementInline(NestedTabularInline):
-    model = get_model('rsr', 'PlannedDisbursement')
+    model = apps.get_model('rsr', 'PlannedDisbursement')
     extra = 0
     fieldsets = (
         ('Planned Disbursement', {
@@ -694,7 +694,7 @@ class PlannedDisbursementInline(NestedTabularInline):
 
 
 class PolicyMarkerInline(NestedTabularInline):
-    model = get_model('rsr', 'PolicyMarker')
+    model = apps.get_model('rsr', 'PolicyMarker')
     extra = 0
     fieldsets = (
         ('Policy Marker', {
@@ -705,7 +705,7 @@ class PolicyMarkerInline(NestedTabularInline):
 
 
 class ProjectConditionInline(NestedTabularInline):
-    model = get_model('rsr', 'ProjectCondition')
+    model = apps.get_model('rsr', 'ProjectCondition')
     extra = 0
     fieldsets = (
         ('Project Condition', {
@@ -716,7 +716,7 @@ class ProjectConditionInline(NestedTabularInline):
 
 
 class ProjectContactInline(NestedStackedInline):
-    model = get_model('rsr', 'ProjectContact')
+    model = apps.get_model('rsr', 'ProjectContact')
     fieldsets = (
         (None, {
             'fields': ('type', 'person_name', 'email', 'job_title', 'organisation', 'telephone',
@@ -736,7 +736,7 @@ class ProjectContactInline(NestedStackedInline):
 
 
 class RecipientCountryInline(NestedTabularInline):
-    model = get_model('rsr', 'RecipientCountry')
+    model = apps.get_model('rsr', 'RecipientCountry')
     extra = 0
     fieldsets = (
         ('Recipient Country', {
@@ -747,7 +747,7 @@ class RecipientCountryInline(NestedTabularInline):
 
 
 class RecipientRegionInline(NestedTabularInline):
-    model = get_model('rsr', 'RecipientRegion')
+    model = apps.get_model('rsr', 'RecipientRegion')
     extra = 0
     fieldsets = (
         ('Recipient Region', {
@@ -758,7 +758,7 @@ class RecipientRegionInline(NestedTabularInline):
 
 
 class SectorInline(NestedTabularInline):
-    model = get_model('rsr', 'Sector')
+    model = apps.get_model('rsr', 'Sector')
     fields = ('sector_code', 'vocabulary', 'percentage', 'text')
 
     def get_extra(self, request, obj=None, **kwargs):
@@ -769,13 +769,13 @@ class SectorInline(NestedTabularInline):
 
 
 class TransactionSectorInline(NestedTabularInline):
-    model = get_model('rsr', 'TransactionSector')
+    model = apps.get_model('rsr', 'TransactionSector')
     fields = ('code', 'vocabulary', 'text')
     extra = 0
 
 
 class TransactionInline(NestedStackedInline):
-    model = get_model('rsr', 'Transaction')
+    model = apps.get_model('rsr', 'Transaction')
     inlines = (TransactionSectorInline, )
     fieldsets = (
         (None, {
@@ -799,7 +799,7 @@ class TransactionInline(NestedStackedInline):
 
 
 class LegacyDataInline(NestedTabularInline):
-    model = get_model('rsr', 'LegacyData')
+    model = apps.get_model('rsr', 'LegacyData')
     extra = 0
     fieldsets = (
         ('Legacy Data', {
@@ -810,7 +810,7 @@ class LegacyDataInline(NestedTabularInline):
 
 
 class RelatedProjectInline(NestedStackedInline):
-    model = get_model('rsr', 'RelatedProject')
+    model = apps.get_model('rsr', 'RelatedProject')
     fields = ('related_project', 'related_iati_id', 'relation')
     fk_name = 'project'
 
@@ -822,7 +822,7 @@ class RelatedProjectInline(NestedStackedInline):
 
 
 class ProjectAdmin(TimestampsAdminDisplayMixin, ObjectPermissionsModelAdmin, NestedModelAdmin):
-    model = get_model('rsr', 'project')
+    model = apps.get_model('rsr', 'project')
     inlines = (
         RelatedProjectInline, ProjectContactInline, PartnershipInline, ProjectDocumentInline,
         ProjectLocationInline, SectorInline, BudgetItemAdminInLine, TransactionInline,
@@ -1113,11 +1113,11 @@ class ProjectAdmin(TimestampsAdminDisplayMixin, ObjectPermissionsModelAdmin, Nes
         context.update(extra_context or {})
         return self.render_change_form(request, context, form_url=form_url, add=True)
 
-admin.site.register(get_model('rsr', 'project'), ProjectAdmin)
+admin.site.register(apps.get_model('rsr', 'project'), ProjectAdmin)
 
 
 class ApiKeyInline(admin.StackedInline):
-    model = get_model('tastypie', 'apikey')
+    model = apps.get_model('tastypie', 'apikey')
     fields = ('key',)
     readonly_fields = ('key',)
 
@@ -1149,7 +1149,7 @@ class UserChangeForm(DjangoUserChangeForm):
 
 
 class UserAdmin(DjangoUserAdmin):
-    model = get_model('rsr', 'user')
+    model = apps.get_model('rsr', 'user')
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
@@ -1202,13 +1202,13 @@ class UserAdmin(DjangoUserAdmin):
                 # User doesn't manage any organisation, only return the user itself
                 return get_user_model().objects.filter(pk=request.user.pk)
 
-admin.site.register(get_user_model(), UserAdmin)
+# admin.site.register(get_user_model(), UserAdmin)
 
 
 class NarrativeReportAdmin(admin.ModelAdmin):
     list_display = (u'project', u'category', u'published',)
 
-admin.site.register(get_model('rsr', 'narrativereport'), NarrativeReportAdmin)
+admin.site.register(apps.get_model('rsr', 'narrativereport'), NarrativeReportAdmin)
 
 
 class ProjectCommentAdmin(admin.ModelAdmin):
@@ -1217,11 +1217,11 @@ class ProjectCommentAdmin(admin.ModelAdmin):
     search_fields = ('project__id', 'project__title', 'user__first_name', 'user__last_name',)
     readonly_fields = ('created_at', 'last_modified_at')
 
-admin.site.register(get_model('rsr', 'projectcomment'), ProjectCommentAdmin)
+admin.site.register(apps.get_model('rsr', 'projectcomment'), ProjectCommentAdmin)
 
 
 class ProjectUpdateLocationInline(admin.StackedInline):
-    model = get_model('rsr', 'projectupdatelocation')
+    model = apps.get_model('rsr', 'projectupdatelocation')
     extra = 0
     fields = ('latitude', 'longitude', 'city', 'state', 'address_1', 'address_2', 'postcode')
 
@@ -1258,7 +1258,7 @@ class ProjectUpdateAdmin(TimestampsAdminDisplayMixin, AdminVideoMixin, admin.Mod
         super(ProjectUpdateAdmin, self).__init__(model, admin_site)
 
 
-admin.site.register(get_model('rsr', 'projectupdate'), ProjectUpdateAdmin)
+admin.site.register(apps.get_model('rsr', 'projectupdate'), ProjectUpdateAdmin)
 
 
 class PartnerSiteAdmin(TimestampsAdminDisplayMixin, admin.ModelAdmin):
@@ -1343,18 +1343,18 @@ class PartnerSiteAdmin(TimestampsAdminDisplayMixin, admin.ModelAdmin):
                 qs = qs | PartnerSite.objects.filter(pk__in=ps_pks)
         return qs.distinct()
 
-admin.site.register(get_model('rsr', 'partnersite'), PartnerSiteAdmin)
+admin.site.register(apps.get_model('rsr', 'partnersite'), PartnerSiteAdmin)
 
 
 class KeywordAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'Keyword')
+    model = apps.get_model('rsr', 'Keyword')
     list_display = ('label', 'logo')
 
-admin.site.register(get_model('rsr', 'Keyword'), KeywordAdmin)
+admin.site.register(apps.get_model('rsr', 'Keyword'), KeywordAdmin)
 
 
 class EmploymentAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'Employment')
+    model = apps.get_model('rsr', 'Employment')
     list_display = ('__unicode__', 'user', 'organisation', 'group', 'is_approved',
                     'iati_country', 'job_title')
     list_filter = ('is_approved', 'organisation')
@@ -1379,11 +1379,11 @@ class EmploymentAdmin(admin.ModelAdmin):
             kwargs['queryset'] = request.user.employers.approved().organisations().users()
         return super(EmploymentAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
-admin.site.register(get_model('rsr', 'Employment'), EmploymentAdmin)
+admin.site.register(apps.get_model('rsr', 'Employment'), EmploymentAdmin)
 
 
 class IatiImportLogAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'IatiImportLog')
+    model = apps.get_model('rsr', 'IatiImportLog')
     list_display = ('iati_import_job', 'project', 'message_type', 'tag', 'model_field',
                     'iati_activity_import', 'text', 'created_at',)
     list_display = ('iati_import_job', 'message_type', 'tag', 'model_field', 'iati_activity_import', 'text', 'created_at',)
@@ -1394,11 +1394,11 @@ class IatiImportLogAdmin(admin.ModelAdmin):
         qs = qs.select_related('project', 'iati_activity_import', 'iati_import_job')
         return qs
 
-admin.site.register(get_model('rsr', 'IatiImportLog'), IatiImportLogAdmin)
+admin.site.register(apps.get_model('rsr', 'IatiImportLog'), IatiImportLogAdmin)
 
 
 class IatiImportLogInline(admin.TabularInline):
-    model = get_model('rsr', 'IatiImportLog')
+    model = apps.get_model('rsr', 'IatiImportLog')
     fk_name = 'iati_import_job'
     fields = ('iati_import_job_admin_url', 'project', 'activity_admin_url', 'message_type', 'tag',
               'model_field', 'text', 'created_at',)
@@ -1419,7 +1419,7 @@ class IatiImportJobAdmin(admin.ModelAdmin):
     import is still managed by the the cron job in combination with the iati_import management
     command.
     """
-    model = get_model('rsr', 'IatiImportJob')
+    model = apps.get_model('rsr', 'IatiImportJob')
     inlines = (IatiImportLogInline,)
     readonly_fields = ('status', 'sha1_hexdigest',)
     list_display = ('__unicode__', 'status',)
@@ -1429,11 +1429,11 @@ class IatiImportJobAdmin(admin.ModelAdmin):
         if iati_import_job.iati_xml_file:
             iati_import_job.iati_import.run_immediately = True
 
-admin.site.register(get_model('rsr', 'IatiImportJob'), IatiImportJobAdmin)
+admin.site.register(apps.get_model('rsr', 'IatiImportJob'), IatiImportJobAdmin)
 
 
 class IatiImportJobInline(admin.TabularInline):
-    model = get_model('rsr', 'IatiImportJob')
+    model = apps.get_model('rsr', 'IatiImportJob')
     # fk_name = 'iati_import'
     fields = ('admin_url', 'status', 'iati_xml_file', 'sha1_hexdigest',)
     readonly_fields = ('admin_url', 'status', 'sha1_hexdigest',)
@@ -1441,7 +1441,7 @@ class IatiImportJobInline(admin.TabularInline):
 
 
 class IatiImportAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'IatiImport')
+    model = apps.get_model('rsr', 'IatiImport')
     list_display = ('__unicode__', 'user', 'next_execution', 'enabled', 'running',)
     readonly_fields = ('next_execution', 'running',)
     inlines = (IatiImportJobInline,)
@@ -1454,7 +1454,7 @@ class IatiImportAdmin(admin.ModelAdmin):
             db_field, request, **kwargs
         )
 
-admin.site.register(get_model('rsr', 'IatiImport'), IatiImportAdmin)
+admin.site.register(apps.get_model('rsr', 'IatiImport'), IatiImportAdmin)
 
 
 class IatiImportLogActivityInline(IatiImportLogInline):
@@ -1462,14 +1462,14 @@ class IatiImportLogActivityInline(IatiImportLogInline):
 
 
 class IatiActivityImportAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'IatiActivityImport')
+    model = apps.get_model('rsr', 'IatiActivityImport')
     inlines = (IatiImportLogActivityInline,)
 
-admin.site.register(get_model('rsr', 'IatiActivityImport'), IatiActivityImportAdmin)
+admin.site.register(apps.get_model('rsr', 'IatiActivityImport'), IatiActivityImportAdmin)
 
 
 class IatiActivityExportInline(admin.TabularInline):
-    model = get_model('rsr', 'IatiActivityExport')
+    model = apps.get_model('rsr', 'IatiActivityExport')
     fk_name = 'iati_export'
     fields = ('project', 'status', 'created_at')
     readonly_fields = ('project', 'status', 'created_at')
@@ -1477,17 +1477,17 @@ class IatiActivityExportInline(admin.TabularInline):
 
 
 class IatiExportAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'IatiExport')
+    model = apps.get_model('rsr', 'IatiExport')
     list_display = ('__unicode__', 'reporting_organisation', 'user', 'version', 'iati_file',
                     'show_status', 'is_public')
     exclude = ('projects', )
     inlines = (IatiActivityExportInline, )
 
-admin.site.register(get_model('rsr', 'IatiExport'), IatiExportAdmin)
+admin.site.register(apps.get_model('rsr', 'IatiExport'), IatiExportAdmin)
 
 
 class ValidationInline(admin.TabularInline):
-    model = get_model('rsr', 'ProjectEditorValidation')
+    model = apps.get_model('rsr', 'ProjectEditorValidation')
     fields = ('validation', 'action', )
     ordering = ('validation',)
 
@@ -1499,16 +1499,16 @@ class ValidationInline(admin.TabularInline):
 
 
 class ValidationSetAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'ProjectEditorValidationSet')
+    model = apps.get_model('rsr', 'ProjectEditorValidationSet')
     list_display = ('name', 'description')
     fields = ('name', 'description')
     inlines = (ValidationInline, )
 
-admin.site.register(get_model('rsr', 'ProjectEditorValidationSet'), ValidationSetAdmin)
+admin.site.register(apps.get_model('rsr', 'ProjectEditorValidationSet'), ValidationSetAdmin)
 
 
 class IndicatorPeriodDataCommentInline(admin.TabularInline):
-    model = get_model('rsr', 'IndicatorPeriodDataComment')
+    model = apps.get_model('rsr', 'IndicatorPeriodDataComment')
 
     def get_extra(self, request, obj=None, **kwargs):
         if obj:
@@ -1518,23 +1518,23 @@ class IndicatorPeriodDataCommentInline(admin.TabularInline):
 
 
 class IndicatorPeriodDataAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'IndicatorPeriodData')
+    model = apps.get_model('rsr', 'IndicatorPeriodData')
     list_display = ('period', 'user', 'value', 'status')
     readonly_fields = ('created_at', 'last_modified_at')
     inlines = (IndicatorPeriodDataCommentInline, )
 
-admin.site.register(get_model('rsr', 'IndicatorPeriodData'), IndicatorPeriodDataAdmin)
+admin.site.register(apps.get_model('rsr', 'IndicatorPeriodData'), IndicatorPeriodDataAdmin)
 
 
 class ReportAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'Report')
+    model = apps.get_model('rsr', 'Report')
     save_as = True
     filter_horizontal = ('organisations',)
 
-admin.site.register(get_model('rsr', 'Report'), ReportAdmin)
+admin.site.register(apps.get_model('rsr', 'Report'), ReportAdmin)
 
 
 class ReportFormatAdmin(admin.ModelAdmin):
-    model = get_model('rsr', 'ReportFormat')
+    model = apps.get_model('rsr', 'ReportFormat')
 
-admin.site.register(get_model('rsr', 'Reportformat'), ReportFormatAdmin)
+admin.site.register(apps.get_model('rsr', 'Reportformat'), ReportFormatAdmin)

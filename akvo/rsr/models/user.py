@@ -60,7 +60,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
+xo    """
     A fully featured User model with admin-compliant permissions that uses a full-length email
     field as the username.
     Email and password are required. Other fields are optional.

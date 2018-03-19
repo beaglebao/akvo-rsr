@@ -69,6 +69,7 @@ class IatiActivityImport(TimestampsMixin):
         # return unicode(u'IATI activity import (ID: {})'.format(getattr(self, 'pk', '')))
 
     class Meta:
+        app_label = 'rsr'
         verbose_name = _(u'IATI activity import')
         verbose_name_plural = _(u'IATI activity imports')
 

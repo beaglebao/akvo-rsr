@@ -121,6 +121,9 @@ class OrganisationLocation(BaseLocation):
     def iati_country_value_unicode(self):
         return unicode(self.iati_country_value())
 
+    class Meta:
+        app_label = 'rsr'
+
 
 class ProjectLocation(BaseLocation):
     location_target = models.ForeignKey('Project', related_name='locations')
@@ -227,6 +230,9 @@ class ProjectLocation(BaseLocation):
     def iati_designation_unicode(self):
         return unicode(self.iati_designation())
 
+    class Meta:
+        app_label = 'rsr'
+
 
 # Over-riding fields doesn't work in Django < 1.10, and hence this hack.
 ProjectLocation._meta.get_field('country').help_text = _(
@@ -271,3 +277,6 @@ class AdministrativeLocation(models.Model):
 
 class ProjectUpdateLocation(BaseLocation):
     location_target = models.ForeignKey('ProjectUpdate', related_name='locations')
+
+    class Meta:
+        app_label = 'rsr'

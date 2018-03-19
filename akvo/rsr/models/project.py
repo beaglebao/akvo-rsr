@@ -8,20 +8,19 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 
 from decimal import Decimal, InvalidOperation
 
+from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import ValidationError, ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import get_model, Max, Sum
+from django.db.models import Max, Sum
 from django.db.models.signals import post_save, post_delete
 from django.db.models.query import QuerySet as DjangoQuerySet
 from django.dispatch import receiver
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
-
-from django_counter.models import ViewCounter
 
 from sorl.thumbnail.fields import ImageField
 
@@ -44,7 +43,6 @@ from .iati_check import IatiCheck
 from .result import IndicatorPeriod
 from .link import Link
 from .models_utils import OrganisationsQuerySetManager, QuerySetManager
-from .organisation import Organisation
 from .partnership import Partnership
 from .project_update import ProjectUpdate
 from .project_editor_validation import ProjectEditorValidationSet
@@ -321,7 +319,7 @@ class Project(TimestampsMixin, models.Model):
                                           'iati-identifier/#definition</a>'
     )
     hierarchy = models.PositiveIntegerField(
-        _(u'hierarchy'), null=True, blank=True, max_length=1, choices=HIERARCHY_OPTIONS,
+        _(u'hierarchy'), null=True, blank=True, choices=HIERARCHY_OPTIONS,
         help_text=_(u'If you are reporting multiple levels of projects in RSR, you can specify '
                     u'whether this is a core, sub, or lower sub activity here.')
     )
@@ -589,11 +587,6 @@ class Project(TimestampsMixin, models.Model):
     # End new API
 
     @property
-    def view_count(self):
-        counter = ViewCounter.objects.get_for_object(self)
-        return counter.count or 0
-
-    @property
     def reporting_partner(self):
         """ In some cases we need the partnership object instead of the organisation to be able to
             access is_secondary_reporter
@@ -791,7 +784,7 @@ class Project(TimestampsMixin, models.Model):
 
         # The following 8 methods return organisation querysets
         def _partners(self, role=None):
-            orgs = Organisation.objects.filter(partnerships__project__in=self)
+            orgs = apps.get_model('rsr', 'organisation').objects.filter(partnerships__project__in=self)
             if role:
                 orgs = orgs.filter(partnerships__iati_organisation_role=role)
             return orgs.distinct()
@@ -834,11 +827,11 @@ class Project(TimestampsMixin, models.Model):
             return PublishingStatus.objects.filter(project__in=self)
 
         def keywords(self):
-            Keyword = get_model('rsr', 'Keyword')
+            Keyword = apps.get_model('rsr', 'Keyword')
             return Keyword.objects.filter(projects__in=self).distinct()
 
         def sectors(self):
-            Sector = get_model('rsr', 'Sector')
+            Sector = apps.get_model('rsr', 'Sector')
             return Sector.objects.filter(project__in=self).distinct()
 
     def __unicode__(self):
@@ -1302,7 +1295,7 @@ class Project(TimestampsMixin, models.Model):
         return import_success, 'Results imported'
 
     def add_result(self, result):
-        child_result = get_model('rsr', 'Result').objects.create(
+        child_result = apps.get_model('rsr', 'Result').objects.create(
             project=self,
             parent_result=result,
             title=result.title,
@@ -1324,7 +1317,7 @@ class Project(TimestampsMixin, models.Model):
         the indicator, if the indicator is being created and not updated.
 
         """
-        Indicator = get_model('rsr', 'Indicator')
+        Indicator = apps.get_model('rsr', 'Indicator')
         child_indicator, created = Indicator.objects.update_or_create(
             result=result,
             parent_indicator=indicator,
@@ -1356,7 +1349,7 @@ class Project(TimestampsMixin, models.Model):
         method automatically updates the existing one, if there is one.
 
         """
-        IndicatorPeriod = get_model('rsr', 'IndicatorPeriod')
+        IndicatorPeriod = apps.get_model('rsr', 'IndicatorPeriod')
         child_period, created = IndicatorPeriod.objects.select_related(
             'indicator',
             'indicator__result',
@@ -1372,14 +1365,14 @@ class Project(TimestampsMixin, models.Model):
         self._update_fields_if_not_child_updated(period, child_period, fields)
 
     def add_dimension(self, indicator, dimension):
-        get_model('rsr', 'IndicatorDimension').objects.create(
+        apps.get_model('rsr', 'IndicatorDimension').objects.create(
             indicator=indicator,
             name=dimension.name,
             value=dimension.value,
         )
 
     def add_reference(self, indicator, reference):
-        get_model('rsr', 'IndicatorReference').objects.create(
+        apps.get_model('rsr', 'IndicatorReference').objects.create(
             indicator=indicator,
             reference=reference.reference,
             vocabulary=reference.vocabulary,
@@ -1408,7 +1401,7 @@ class Project(TimestampsMixin, models.Model):
         return False
 
     def indicator_labels(self):
-        return get_model('rsr', 'OrganisationIndicatorLabel').objects.filter(
+        return apps.get_model('rsr', 'OrganisationIndicatorLabel').objects.filter(
             organisation=self.all_partners()
         ).distinct()
 

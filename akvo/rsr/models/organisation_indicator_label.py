@@ -12,9 +12,8 @@ from ..fields import ValidXMLCharField
 
 
 class OrganisationIndicatorLabel(models.Model):
-    from .organisation import Organisation
 
-    organisation = models.ForeignKey(Organisation, verbose_name=_(u'organisation'),
+    organisation = models.ForeignKey('Organisation', verbose_name=_(u'organisation'),
                                      related_name='indicator_labels')
     label = ValidXMLCharField(_(u'label'), max_length=100)
 

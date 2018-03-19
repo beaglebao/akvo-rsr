@@ -199,7 +199,7 @@ class BaseProjectFilter(django_filters.FilterSet):
 
     title_or_subtitle = django_filters.CharFilter(
         label=_(u'Search'),
-        action=filter_title_or_subtitle)
+        method=filter_title_or_subtitle)
 
 
 def create_project_filter_class(request, projects):
@@ -237,7 +237,7 @@ def create_project_filter_class(request, projects):
         location = django_filters.ChoiceFilter(
             choices=locations(),
             label=_(u'location'),
-            action=filter_m49,
+            method=filter_m49,
         )
 
         organisation = django_filters.ChoiceFilter(
@@ -261,16 +261,17 @@ def create_project_filter_class(request, projects):
     return ProjectFilter
 
 
-class ChoiceMethodFilter(django_filters.MethodFilter):
-    field_class = forms.ChoiceField
+# class ChoiceMethodFilter(django_filters.filters.FilterMethod):
+#     field_class = forms.ChoiceField
 
 
 class ProjectUpdateFilter(django_filters.FilterSet):
 
-    partner = ChoiceMethodFilter(
-        choices=get_orgs(),
-        label=_(u'organisation'),
-        action='partner_updates')
+    # FIXME DJANGO_UPGRADE_FIXME
+    # partner = ChoiceMethodFilter(
+    #     choices=get_orgs(),
+    #     label=_(u'organisation'),
+    #     action='partner_updates')
 
     sector = django_filters.ChoiceFilter(
         initial=_('All'),
@@ -285,7 +286,7 @@ class ProjectUpdateFilter(django_filters.FilterSet):
 
     class Meta:
         model = ProjectUpdate
-        fields = ['partner', 'sector', 'title', ]
+        fields = ['sector', 'title', ] # DJANGO_UPGRADE_FIXME 'partner'
 
     def partner_updates(self, qs, value):
         """Updates made by users of org in projects where org is a partner."""

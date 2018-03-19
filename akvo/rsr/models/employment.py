@@ -8,6 +8,7 @@ from akvo.codelists import models as codelist_models
 from akvo.codelists.store.codelists_v202 import COUNTRY
 from akvo.utils import codelist_choices, codelist_value
 
+from django.apps import apps
 from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -47,7 +48,7 @@ class Employment(models.Model):
             """
             Return an Organisation QuerySet containing the organisations of the Employment QuerySet
             """
-            from ..models import Organisation
+            Organisation = apps.get_model('rsr', 'organisation')
             return Organisation.objects.filter(employees__in=self).distinct()
 
         def users(self):

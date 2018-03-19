@@ -19,7 +19,7 @@ from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import get_model
+from django.apps import apps
 from django.http import HttpResponse
 from django.template import loader
 from django.utils.text import slugify
@@ -206,9 +206,9 @@ def right_now_in_akvo():
     """
     Calculate the numbers used in the "Right now in Akvo" box on the home page.
     """
-    projects = get_model('rsr', 'Project').objects.public().published()
-    organisations = get_model('rsr', 'Organisation').objects.all()
-    updates = get_model('rsr', 'ProjectUpdate').objects.all()
+    projects = apps.get_model('rsr', 'Project').objects.public().published()
+    organisations = apps.get_model('rsr', 'Organisation').objects.all()
+    updates = apps.get_model('rsr', 'ProjectUpdate').objects.all()
     people_served = projects.get_largest_value_sum(
         getattr(settings, 'AFFECTED_BENCHMARKNAME', 'people affected')
     )
@@ -245,7 +245,7 @@ def pagination(page, object_list, objects_per_page):
         # If page is out of range (e.g. 9999), deliver last page of results.
         page = paginator.page(paginator.num_pages)
 
-    page_range = paginator.page_range
+    page_range = list(paginator.page_range)
     active = page.number
 
     if not len(page_range) < 10:

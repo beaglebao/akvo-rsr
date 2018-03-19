@@ -4,7 +4,7 @@
 
 from django.template import Library, Node
 from django.template import resolve_variable
-import GChartWrapper
+# import GChartWrapper
 
 register = Library()
 
@@ -22,8 +22,8 @@ class AttrNode(Node):
 
 def attribute(parser, token):
     return AttrNode(token.split_contents())
-for tag in GChartWrapper.constants.TTAGSATTRS:
-    register.tag(tag, attribute)
+# for tag in GChartWrapper.constants.TTAGSATTRS:
+#     register.tag(tag, attribute)
 
 
 class ChartNode(Node):

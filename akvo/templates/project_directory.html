@@ -28,7 +28,7 @@
           </div>
           <div class="col-lg-7 col-md-12 col-lg-offset-1" id="filter-wrapper">
             {% if q %}
-              <div> 
+              <div>
                 <p class="">{% trans "Refine the project search" %}</p>
                 <a href="{% url 'project-directory' %}" class="btn"><i class="fa fa-times"></i>  {% trans 'Reset all filters' %}</a>
               </div>
@@ -44,11 +44,11 @@
   <section class="main-list projects">
     <div class="container-fluid">
       <div  class="row">
-        <div class="col-sm-8">        
+        <div class="col-sm-8">
           <p class="text-center">
              View
             {% for page_number, page_size in page_info|slice:"1:" %}
-            <a class="btn pageSize" href="{% addparam 'limit' page_size 'page' page_number %}">{{page_size}}</a>  
+            <a class="btn pageSize" href="{% addparam 'limit' page_size 'page' page_number %}">{{page_size}}</a>
             {% endfor %}
             projects
           </p>
@@ -75,7 +75,7 @@
                   </div>
                 </li>
               {% endfor %}
-            </ul>       
+            </ul>
             {% include 'navigation/pagination.html' %}
         </div>
         <div class="col-sm-5">
